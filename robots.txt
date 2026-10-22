@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://casaproductionmaker.github.io/kairos/sitemap.xml

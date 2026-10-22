@@ -1,0 +1,484 @@
+* {
+	/* --main-theme
+	--font
+	--light-bg
+	--main-bg */
+	/* 
+		#a393bf, #9882ac, #73648a, #453750, #0c0910
+		#c0e0de, #9eefe5, #4f7cac, #3c474b, #162521
+		#c2e7d9, #a6cfd5, #26408b, #0f084b, #0d0221
+	*/
+	--handle-color: #F000;
+	box-sizing: border-box;
+	margin: 0;
+	font-family: 'Courier New', Courier, monospace;
+	font-weight: 600;
+}
+
+#root {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+body {
+	width: 100%;
+	height: 100vh;
+	background-color: var(--main-bg);
+	overflow: hidden;
+}
+
+header {
+	width: 100%;
+	height: 4rem;
+	background-color: var(--main-theme);
+	padding: 0.5rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+header > div {
+	display: flex;
+	flex-direction: row;
+	gap: 0.5rem;
+	flex: 1;
+}
+
+main {
+	flex: 1;
+	overflow: hidden;
+}
+
+.schedule {
+	position: relative;
+	height: 100%;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: none;
+	pointer-events: auto;
+}
+
+.ignore-events {
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: none;
+}
+
+.schedule-tick {
+	position: absolute;
+	height: 100%;
+	width: 0px;
+	border-right: 2px dashed var(--light-bg);
+	background-color: transparent;
+	pointer-events: none;
+}
+
+.schedule-tick.current-time-selector {
+	border-right: 2px dashed var(--font);
+}
+
+.schedule-tick > p {
+	position: relative;
+	left: 4px;
+	color: var(--light-bg);
+}
+
+.schedule-tick.offset-time > p {
+	top: 1rem;
+	color: var(--main-theme);
+	background-color: var(--main-bg);
+	width: fit-content;
+	/* background-color: red; */
+}
+
+.schedule-tick.offset-time {
+	border-color: var(--main-theme);
+}
+
+.schedule-tick.current-time-selector > p {
+	position: relative;
+	left: 4px;
+	color: var(--font);
+	z-index: 1000;
+	background-color: var(--main-bg);
+	width: fit-content;
+	box-shadow: 0 0 1rem var(--main-bg);
+}
+
+.schedule-task {
+	background-color: var(--main-theme);
+	position: absolute;
+	height: 3rem;
+	border-radius: 0.5rem;
+	padding: 0.5rem;
+	pointer-events: auto;
+	box-shadow: 0 0 1rem #0003;
+}
+
+.schedule-task > p {
+	color: var(--font);
+	pointer-events: auto;
+	cursor: pointer;
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.schedule-task > input {
+	padding: 0;
+	background-color: transparent;
+	border: none;
+	color: var(--font);
+	font-size: 1rem;
+	user-select: auto;
+	-webkit-user-select: auto;
+	touch-action: auto;
+	pointer-events: auto;
+	outline: none;
+	width: 100%;
+}
+
+.schedule-task > input::placeholder {
+	color: var(--font);
+}
+
+.info-bar {
+	display: flex;
+	position: absolute;
+	width: 100%;
+	/* background-color: #9882ac; */
+	height: 1.5rem;
+	bottom: 0;
+	padding: 0 1rem;
+	justify-content: space-between;
+}
+
+.info-bar > div {
+	gap: 0.5rem;
+	display: flex;
+	align-items: center;
+	height: 100%;
+}
+
+.info-bar > div > button {
+	background-color: transparent;
+	border: none;
+	color: var(--font);
+	cursor: pointer;
+	font-size: 1rem;
+	user-select: auto;
+	-webkit-user-select: auto;
+	touch-action: auto;
+	pointer-events: auto;
+}
+
+.info-bar p {
+	color: var(--font);
+}
+
+
+.iconbutton {
+	border-radius: 0.5rem;
+	border: none;
+	height: 100%;
+	aspect-ratio: 1;
+	padding: 0.5rem;
+	cursor: pointer;
+	transition: background-color 300ms ease-in-out;
+	background-color: #0001;
+	color: #000;
+}
+
+.textbutton {
+	border-radius: 0.5rem;
+	border: none;
+	height: 100%;
+	padding: 0.5rem 1rem;
+	cursor: pointer;
+	transition: background-color 300ms ease-in-out;
+	background-color: #0001;
+	color: #000;
+	font-size: 1rem;
+	color: var(--font);
+}
+
+.textbutton:hover {
+	background-color: #0003;
+}
+
+
+.trash {
+	border-radius: 0.5rem;
+	border: none;
+	width: 0;
+	height: 0;
+	background-color: #921515;
+	position: absolute;
+	left: 1rem;
+	bottom: 2rem;
+	transition: width 300ms ease-in, height 300ms ease-out;
+}
+
+.iconbutton:hover {
+	background-color: #0003;
+}
+
+.iconbutton > svg {
+	width: 100%;
+	color: var(--font);
+}
+
+
+.left-handle {
+	left: 0;
+}
+
+.right-handle {
+	right: 0;
+}
+
+.right-handle, .left-handle {
+	position: absolute;
+	width: 6px;
+	height: 100%;
+	background-color: var(--handle-color);
+	top: 0;
+	pointer-events: auto;
+	cursor: ew-resize;
+}
+
+
+.top-handle {
+	top: 0;
+}
+
+.top-handle {
+	position: absolute;
+	height: 6px;
+	width: 100%;
+	background-color: var(--handle-color);
+	left: 0;
+	pointer-events: auto;
+	cursor: grab;
+}
+
+.name-popup {
+	position: absolute;
+	bottom: calc(100% + 0.5rem);
+	left: calc(-50rem + 50%);
+	width: 100rem;
+	height: fit-content;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.name-popup > p {
+	background-color: var(--main-theme);
+	padding: 0.5rem;
+	border-radius: 1rem;
+	color: var(--font);
+}
+
+.schedule-task:hover .name-popup {
+	display: flex;
+}
+
+.preferences-tab {
+	position: absolute;
+	background-color: var(--main-theme);
+	right: 0.5rem;
+	top: 4.5rem;
+	z-index: 10000;
+	padding: 1rem;
+	width: 24rem;
+	border-radius: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	color: var(--font);
+}
+
+.preferences-tab h1 {
+	font-size: 1.5rem;
+	margin: 0;
+}
+
+/* Theme select */
+
+.theme-select {
+	/* display: inline; */
+	position: relative;
+	flex: 1;
+}
+
+.theme-select li {
+	list-style-type: none;
+	padding: 0.25rem 1rem;
+	cursor: pointer;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.theme-select li:hover {
+	background-color: #0001;
+}
+
+.theme-select ul {
+	padding: 0;
+	position: absolute;
+	top: calc(100% + 0.25rem);
+	left: 0;
+	width: 100%;
+	border-radius: 0.25rem;
+	background-color: var(--main-theme);
+	list-style: none;
+	box-shadow: 0 0 0.5rem #0009;
+	max-height: 200px;
+	overflow-y: auto;
+}
+
+.theme-select > button {
+	font-size: 1rem;
+	background-color: #0000;
+	border: none;
+	border-radius: 0.25rem;
+	color: var(--font);
+	cursor: pointer;
+	padding: 0;
+	padding: 0 1rem;
+}
+
+.hidden {
+	display: none;
+}
+
+li > .palette-display {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+	padding: 0 0.5rem;
+	border-radius: 0.5rem;
+	height: 1rem;
+}
+
+li > .palette-display > div {
+	height: 0.5rem;
+	width: 1rem;
+	border-radius: 0.25rem;
+}
+
+.info-tab {
+	position: absolute;
+	background-color: var(--main-theme);
+	right: 0.5rem;
+	top: 4.5rem;
+	z-index: 10000;
+	padding: 1rem;
+	width: 24rem;
+	border-radius: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	color: var(--font);
+}
+
+.info-tab h1 {
+	font-size: 1.5rem;
+	margin: 0;
+}
+
+.info-tab h2 {
+	font-size: 1.25rem;
+	margin: 0;
+}
+
+.preset-tab {
+	position: absolute;
+	background-color: var(--main-theme);
+	right: 0.5rem;
+	top: 4.5rem;
+	z-index: 10000;
+	padding: 1rem;
+	min-width: 32rem;
+	border-radius: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	color: var(--font);
+}
+
+.preset-tab h1 {
+	font-size: 1.5rem;
+	margin: 0;
+}
+
+.preset {
+	/* width: 100%; */
+	display: flex;
+	justify-content: space-between;
+	font-size: 1rem;
+	align-items: center;
+	gap: 1rem;
+}
+
+.preset-actions {
+	/* width: 100%; */
+	display: flex;
+	gap: 0.5rem;
+}
+
+.preset-tab button {
+	border: none;
+	border-radius: 0.25rem;
+	padding: 0.25rem 0;
+	background-color: #0001;
+	cursor: pointer;
+	color: var(--font);
+	transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+.preset-tab button:hover {
+	background-color: #0003;
+}
+
+.preset-actions > button {
+	padding: 0.25rem 0.5rem;
+	transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+.preset-actions > button:hover {
+	background-color: #0003;
+}
+
+.delete-hover-effect {
+	transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+.delete-hover-effect:hover {
+	background-color: #921515 !important;
+	color: #000 !important;
+}
+
+.preset > input {
+	padding: 0;
+	background-color: transparent;
+	border: none;
+	color: var(--font);
+	user-select: auto;
+	-webkit-user-select: auto;
+	touch-action: auto;
+	pointer-events: auto;
+	outline: none;
+	font-size: 1rem;
+}
+
+.preset > input::placeholder {
+	color: var(--font);
+	font-size: 1rem;
+}
