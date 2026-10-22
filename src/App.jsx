@@ -52,7 +52,7 @@ function App() {
 	const currentMinutes = now.getMinutes(); 
 	const [tasks, setTasks] = useState([
 		{
-			name: "Use App", 
+			name: "Start using Kairos", 
 			startTime: currentHour + (currentMinutes / 60), 
 			endTime: currentHour + (currentMinutes / 60) + 1.5, 
 			top: 40
@@ -63,7 +63,7 @@ function App() {
 			name: "Default Preset", 
 			tasks: [
 				{
-					name: "Use App", 
+					name: "Start using Kairos", 
 					startTime: currentHour + (currentMinutes / 60), 
 					endTime: currentHour + (currentMinutes / 60) + 1.5, 
 					top: 40
