@@ -2,11 +2,14 @@
   "name": "timemanagementapp",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://casaproductionmaker.github.io/kairos",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -20,6 +23,7 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "babel-plugin-react-compiler": "^1.0.0",
+    "gh-pages": "^6.3.0",
     "oxlint": "^1.81.0",
     "vite": "^8.3.0"
   }

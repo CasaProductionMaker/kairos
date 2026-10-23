@@ -49,6 +49,9 @@ function Task(props) {
 		>
 			{index == namingTask ? 
 				<input
+					onFocus={(e) => {
+						e.target.scrollIntoView({ behavior: "instant", block: "nearest" });
+					}}
 					ref={namingInputRef}
 					type="text"
 					placeholder="Enter name..."

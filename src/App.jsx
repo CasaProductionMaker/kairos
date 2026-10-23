@@ -116,7 +116,7 @@ function App() {
 	}, [hourWidth]);
 
 	useEffect(() => {
-		namingInputRef.current?.focus();
+		namingInputRef.current?.focus(({ preventScroll: true }));
 	}, [namingTask]);
 
 	useEffect(() => {
@@ -223,7 +223,7 @@ function App() {
 					</button>
 				</div>
 				<div style={{justifyContent: "end"}}>
-					<button className="textbutton" onClick={() => {
+					<button className="textbutton delete-hover-effect" onClick={() => {
 						setTasks([]);
 					}}>
 						Clear All
