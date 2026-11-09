@@ -5,6 +5,7 @@ import { themes } from '../themes';
 import SettingsMenu from './SettingsMenu'
 import InfoMenu from './InfoMenu';
 import PresetTab from './PresetTab';
+import Popup from './Popup';
 
 const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
 
@@ -34,8 +35,10 @@ function App() {
 	const snapSize = 5;
 
 	// state
+	const isMobile = window.matchMedia("(pointer: coarse)").matches;
+
 	const [scrollOffset, setScrollOffset] = useState(0);
-	const [hourWidth, setHourWidth] = useState(10);
+	const [hourWidth, setHourWidth] = useState(isMobile ? 20 : 10);
 	const [dragging, setDragging] = useState(false);
 	const [initalScrollValue, setInitalScrollValue] = useState(0);
 	const [initalPointerPos, setInitalPointerPos] = useState(0);
@@ -72,6 +75,7 @@ function App() {
 		}
 	]);
 	const [currentTheme, setCurrentTheme] = useState("default");
+	const [currentPopup, setCurrentPopup] = useState(null);
 
 	// refs
 	const namingInputRef = useRef(null);
@@ -220,20 +224,72 @@ function App() {
 							<path transform="translate(29 -29)" d="M9,42L22.01,55.01" />
 							<path transform="translate(1 -1)" d="M4,53L11.065,60.065" />
 						</svg>
+						<span>New Task</span>
 					</button>
 				</div>
 				<div style={{justifyContent: "end"}}>
-					<button className="textbutton delete-hover-effect" onClick={() => {
-						setTasks([]);
+					<button className="iconbutton delete-hover-effect" onClick={() => {
+						setCurrentPopup({
+							header: "Are you sure you want to clear all of your tasks?", 
+							description: "This action is irreversible.", 
+							buttons: [
+								{
+									name: "Close", 
+									color: "#0002", 
+									trigger: () => {setCurrentPopup(null)}
+								}, 
+								{
+									name: "Clear", 
+									color: "#921515", 
+									trigger: () => {setTasks([]); setCurrentPopup(null)}
+								}
+							]
+						});
 					}}>
-						Clear All
+						<svg
+							width="100%"
+							height="100%"
+							viewBox="0 0 64 64"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth={4.17}
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							aria-hidden="true"
+						>
+							<path d="M12,15L52,15" />
+							<path d="M25.984,14C25.984,14 26.997,8 32,8C37.003,8 38,14 38,14" />
+							<path d="M14,21L50,21L48,57L16,57L14,21Z" />
+							<path d="M24,52L23,26" />
+							<path d="M32,26L32,52" />
+							<path d="M40,52L41,26" />
+						</svg>
+						<span>Clear All</span>
 					</button>
-					<button className="textbutton" onClick={() => {
+					<button className="iconbutton" onClick={() => {
 						setShowPresetTab(prevShowPresetTab => !prevShowPresetTab);
 						setShowInfo(false);
 						setShowSettings(false);
 					}}>
-						Presets
+						<svg
+							width="100%"
+							height="100%"
+							viewBox="0 0 64 64"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth={4.17}
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							aria-hidden="true"
+						>
+							<path d="M7,7L32,7L32,27L7,27L7,7" />
+							<path d="M57,57L32,57L32,37L57,37L57,57" />
+							<path d="M7,37L7,57" />
+							<path d="M7,47.004L32,47" />
+							<path d="M32,17L57,17" />
+							<path d="M57,7L57,27" />
+						</svg>
+						<span>Presets</span>
 					</button>
 					<button className="iconbutton" onClick={() => {
 						setShowSettings(prevShowSettings => !prevShowSettings);
@@ -254,6 +310,7 @@ function App() {
 							<path d="M29.389,5.127C31.125,4.958 32.875,4.958 34.611,5.127L35.471,9.314C37.136,9.569 38.768,10.006 40.337,10.618L43.175,7.421C44.764,8.144 46.278,9.018 47.698,10.033L46.349,14.089C47.664,15.142 48.858,16.336 49.911,17.651L53.967,16.302C54.982,17.722 55.856,19.236 56.579,20.825L53.382,23.663C53.994,25.232 54.431,26.864 54.686,28.529L58.873,29.389C59.042,31.125 59.042,32.875 58.873,34.611L54.686,35.471C54.431,37.136 53.994,38.768 53.382,40.337L56.579,43.175C55.856,44.764 54.982,46.278 53.967,47.698L49.911,46.349C48.858,47.664 47.664,48.858 46.349,49.911L47.698,53.967C46.278,54.982 44.764,55.856 43.175,56.579L40.337,53.382C38.768,53.994 37.136,54.431 35.471,54.686L34.611,58.873C32.875,59.042 31.125,59.042 29.389,58.873L28.529,54.686C26.864,54.431 25.232,53.994 23.663,53.382L20.825,56.579C19.236,55.856 17.722,54.982 16.302,53.967L17.651,49.911C16.336,48.858 15.142,47.664 14.089,46.349L10.033,47.698C9.018,46.278 8.144,44.764 7.421,43.175L10.618,40.337C10.006,38.768 9.569,37.136 9.314,35.471L5.127,34.611C4.958,32.875 4.958,31.125 5.127,29.389L9.314,28.529C9.569,26.864 10.006,25.232 10.618,23.663L7.421,20.825C8.144,19.236 9.018,17.722 10.033,16.302L14.089,17.651C15.142,16.336 16.336,15.142 17.651,14.089L16.302,10.033C17.722,9.018 19.236,8.144 20.825,7.421L23.663,10.618C25.232,10.006 26.864,9.569 28.529,9.314L29.389,5.127Z"/>
 							<circle cx="32" cy="32" r="14"/>
 						</svg>
+						<span>Preferences</span>
 					</button>
 					<button className="iconbutton" style={{fontSize: "2rem", color: "var(--font)"}} onClick={() => {
 						setShowInfo(prevShowInfo => !prevShowInfo);
@@ -264,13 +321,11 @@ function App() {
 					</button>
 					{showSettings && <SettingsMenu currentTheme={currentTheme} setCurrentTheme={setCurrentTheme} />}
 					{showInfo && <InfoMenu />}
-					{showPresetTab && <PresetTab presets={presets} setPresets={setPresets} setTasks={setTasks} tasks={tasks} />}
+					{showPresetTab && <PresetTab presets={presets} setPresets={setPresets} setTasks={setTasks} tasks={tasks} setCurrentPopup={setCurrentPopup} />}
 				</div>
 			</header>
 			<main
 				onWheel={(e) => {
-					// setHourWidth((prevHourWidth) => clamp(prevHourWidth + (e.deltaY * 0.25), 5, 50));
-					// setScrollOffset((prevOffset) => clamp(prevOffset, 0, 24 * hourWidth - 100));
 					const delta = e.deltaY;
 					// const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
 					setScrollOffset((prevOffset) => clamp(prevOffset + (delta * 0.25), 0, 24 * hourWidth - 100));
@@ -359,7 +414,7 @@ function App() {
 						<p>Now</p>
 					</div>
 					{tasksElements}
-					<div className="schedule-tick ignore-events current-time-selector" ref={timeMarkerRef}>
+					<div className="schedule-tick ignore-events current-time-selector hide-on-mobile" ref={timeMarkerRef}>
 						<p ref={timeMarkerTimeRef}></p>
 					</div>
 				</div>
@@ -379,8 +434,31 @@ function App() {
 						}}>+</button>
 					</div>
 				</div>
-				<div ref={trashRef} className="trash" style={{width: draggingTask == null ? "0" : "12rem", height: draggingTask == null ? "0" : "8rem"}}></div>
+				<div ref={trashRef} className="trash" style={{width: draggingTask == null ? "0" : "12rem", height: draggingTask == null ? "0" : "8rem"}}>
+					<svg
+						width="3rem"
+						height="3rem"
+						viewBox="0 0 64 64"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth={4.17}
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						aria-hidden="true"
+						style={{opacity: draggingTask == null ? "0" : "100"}}
+					>
+						<path d="M12,15L52,15" />
+						<path d="M25.984,14C25.984,14 26.997,8 32,8C37.003,8 38,14 38,14" />
+						<path d="M14,21L50,21L48,57L16,57L14,21Z" />
+						<path d="M24,52L23,26" />
+						<path d="M32,26L32,52" />
+						<path d="M40,52L41,26" />
+					</svg>
+				</div>
 			</main>
+			{currentPopup != null &&
+				<Popup payload={currentPopup}/>
+			}
 		</>
 	)
 }

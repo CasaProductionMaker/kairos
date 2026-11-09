@@ -31,8 +31,6 @@ function Task(props) {
 		setTruncated(isEllipsisActive(nameRef.current));
 	}, [task.name, index === namingTask, task.startTime, task.endTime, hourWidth])
 
-	if (index == namingTask || task.name == "testest") console.log(nameRef.current)
-
 	return (
 		<div
 			className="schedule-task ignore-events"
@@ -86,7 +84,9 @@ function Task(props) {
 					edge: "endTime"
 				})
 			}}></div>
-			<div className="top-handle" onPointerDown={(e) => {
+			<div className="top-handle" style={draggingTask != null && draggingTask.task == index ? {
+				cursor: "grabbing"
+			} : {}} onPointerDown={(e) => {
 				e.target.setPointerCapture(e.pointerId);
 				e.stopPropagation();
 

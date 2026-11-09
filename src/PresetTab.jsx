@@ -11,6 +11,7 @@ function PresetTab(props) {
 	const setPresets = props.setPresets;
 	const tasks = props.tasks;
 	const setTasks = props.setTasks;
+	const setCurrentPopup = props.setCurrentPopup;
 
 	useEffect(() => {
 		if (presets[presets.length - 1] != null && presets[presets.length - 1].isNaming) {
@@ -65,7 +66,22 @@ function PresetTab(props) {
 					]);
 				}}>Load Preset</button>
 				<button className="delete-hover-effect" onClick={() => {
-					setPresets(prevPresets => prevPresets.filter((_, i) => i !== id));
+					setCurrentPopup({
+						header: `Are you sure you want to delete ${preset.name}?`, 
+						description: "This action is irreversible.", 
+						buttons: [
+							{
+								name: "Close", 
+								color: "#0002", 
+								trigger: () => {setCurrentPopup(null)}
+							}, 
+							{
+								name: "Delete", 
+								color: "#921515", 
+								trigger: () => {setPresets(prevPresets => prevPresets.filter((_, i) => i !== id)); setCurrentPopup(null)}
+							}
+						]
+					});
 				}}>Delete</button>
 			</div>
 		</div>
